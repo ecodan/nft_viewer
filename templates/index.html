@@ -1,0 +1,139 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} My Precious {% endblock %}
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}
+{% endblock stylesheets %}
+
+{% block content %}
+    <div class="m-4">
+        <h4>My Account</h4>
+    </div>
+    <div class="card m-4" id="own-account">
+        <div class="card-header">
+            <div class="input-group input-group-sm mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="inputGroup-sizing-sm">My ETH Address</span>
+                </div>
+                <input type="text" placeholder="" id="own-account-address" class="form-control" readonly>
+            </div>
+            <div class="input-group input-group-sm mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="inputGroup-sizing-sm">My ETH Balance</span>
+                </div>
+                <input type="text" placeholder="" id="own-ether-balance" class="form-control" readonly>
+                <button id="ownAccountUpdateButton" class="btn btn-primary ml-1">Refresh</button>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md top m-3">
+                    <table class="table table-responsive">
+                        <caption>Tokens</caption>
+                        <thead class="thead-light">
+                        <tr>
+                            <th scope="col" class="col-sm-1">Coin</th>
+                            <th scope="col" class="col-sm-3">Value</th>
+                        </tr>
+                        </thead>
+                        <tbody id="own-tokens">
+
+                        </tbody>
+                    </table>
+                    <span id="own-token-pages"></span>
+                </div>
+                <div class="col-md top m-3">
+                    <table class="table table-responsive">
+                        <caption>NFTs</caption>
+                        <thead class="thead-light">
+                        <tr>
+                            <th scope="col" class="col-sm-1">Symbol</th>
+                            <th scope="col" class="col-sm-2">Thumbnail</th>
+                            <th scope="col" class="col-sm-3">Description</th>
+                        </tr>
+                        </thead>
+                        <tbody id="own-nfts">
+                        </tbody>
+                    </table>
+                    <span id="own-nft-pages"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="m-4">
+        <h4>Search</h4>
+    </div>
+    <div class="card m-4" id="search-account">
+        <div class="card-header">
+            <div class="input-group input-group-sm mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="inputGroup-sizing-sm">ETH Address</span>
+                </div>
+                <input type="text" placeholder="Enter ETH address " id="address-to-search" class="form-control">
+                <button type="button" onclick="lookupAddress();" class="btn btn-primary ml-1">Lookup Address</button>
+            </div>
+            <div class="input-group input-group-sm mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="inputGroup-sizing-sm">ETH Balance</span>
+                </div>
+                <input type="text" placeholder="" id="search-ether-balance" class="form-control" readonly>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md top m-3">
+                    <table class="table table-responsive">
+                        <caption>Tokens</caption>
+                        <thead class="thead-light">
+                        <tr>
+                            <th scope="col" class="col-sm-1">Coin</th>
+                            <th scope="col" class="col-sm-3">Value</th>
+                        </tr>
+                        </thead>
+                        <tbody id="search-tokens">
+                        </tbody>
+                    </table>
+                    <span id="search-token-pages"></span>
+                </div>
+                <div class="col-md top m-3">
+                    <table class="table table-responsive">
+                        <caption>NFTs</caption>
+                        <thead class="thead-light">
+                        <tr>
+                            <th scope="col" class="col-sm-1">Symbol</th>
+                            <th scope="col" class="col-sm-2">Thumbnail</th>
+                            <th scope="col" class="col-sm-3">Description</th>
+                        </tr>
+                        </thead>
+                        <tbody id="search-nfts">
+                        </tbody>
+                    </table>
+                    <span id="search-nft-pages"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    {#    <button id="btn-login">Moralis Metamask Login</button>#}
+    {#    <button id="btn-logout">Logout</button>#}
+    <script type="text/javascript" src="./main.js"></script>
+
+    <div class="card m-4">
+        <div class="card-header">
+            Featured addresses
+        </div>
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item">studio2rocks (85): 0x3c9a28fe0dc3c5ff75c44531f44043f2567907bd</li>
+            <li class="list-group-item">PAMDOTETH (505): 0x34978faf3a9f469da7248d1365ddf69ac099588c</li>
+        </ul>
+    </div>
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}
+{% endblock javascripts %}
