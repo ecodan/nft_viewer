@@ -1,6 +1,6 @@
 {% extends "layouts/base.html" %}
 
-{% block title %} My Precious {% endblock %}
+{% block title %}Precious NFT{% endblock %}
 
 <!-- Specific Page CSS goes HERE  -->
 {% block stylesheets %}
@@ -116,12 +116,6 @@
         </div>
     </div>
 
-
-
-    {#    <button id="btn-login">Moralis Metamask Login</button>#}
-    {#    <button id="btn-logout">Logout</button>#}
-    <script type="text/javascript" src="./main.js"></script>
-
     <div class="card m-4">
         <div class="card-header">
             Featured addresses
@@ -131,6 +125,27 @@
             <li class="list-group-item">PAMDOTETH (505): 0x34978faf3a9f469da7248d1365ddf69ac099588c</li>
         </ul>
     </div>
+
+    <div id="lightbox-modal" class="modal fade lightbox-modal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="container-fluid">
+                    <div class="row m-3">
+                        <div class="col-md-8 mx-auto" id="modal-image"></div>
+                    </div>
+                    <div class="row m-3">
+                        <div class="input-group input-group-sm">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="inputGroup-sizing-sm">Meta</span>
+                            </div>
+                            <textarea placeholder="" rows="4" id="modal-meta" class="form-control" readonly></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-backdrop fade show" id="backdrop" style="display: none;"></div>
 
 {% endblock content %}
 

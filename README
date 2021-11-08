@@ -1,8 +1,12 @@
 Simple Flask app which serves a SPA javascript Web3/NFT app.
 
 Can be run in a local python virtualenv initialized with requirements.txt.
+> python app.py
 
 Can also be run with the associated Dockerfile as a container.
+
+To configure Intellij/Pycharm to run in Docker during development:
+https://blog.jetbrains.com/pycharm/2017/03/docker-compose-getting-flask-up-and-running/
 
 Deploying container to AWS Lightsail:
 From: https://aws.amazon.com/getting-started/hands-on/serve-a-flask-app/

@@ -2,9 +2,15 @@
 <script src="https://unpkg.com/moralis/dist/moralis.js"></script>
 
 <!-- Bootstrap requirements -->
-<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
 
 <script>
     const loginSpan = document.getElementById("login");
@@ -77,6 +83,9 @@
             return metadata.name;
         }
     }
+
+    var own_nfts = [];
+    var search_nfts = [];
 
     {#
     OpenSea NFT:
@@ -176,6 +185,13 @@
 
         getNfts(address)
             .then((nfts) => {
+                // store nts dataset for later reference as needed
+                if (tgt_elements.source == "own") {
+                    own_nfts = nfts;
+                } else {
+                    search_nfts = nfts;
+                }
+
                 const tbody = document.getElementById(tgt_elements.nfts);
                 clearChildElements(tbody);
                 let num_rows = 0;
@@ -196,8 +212,11 @@
                     let nft_uri = getImageURI(nft['symbol'], JSON.parse(nft['metadata']));
                     let img_nft = document.createElement("img");
                     img_nft.src = nft_uri;
+                    img_nft.onclick = showImageLightbox;
                     img_nft.alt = nft_name;
                     img_nft.className = "img_thumbnail";
+                    img_nft.setAttribute("data-source", tgt_elements.source);
+                    img_nft.setAttribute("data-idx", idx);
                     td_thumb.appendChild(img_nft);
 
                     let tr = document.createElement("tr");
@@ -224,7 +243,8 @@
             "tokens": "own-tokens",
             "nfts": "own-nfts",
             "tokenPages": "own-token-pages",
-            "nftPages": "own-nft-pages"
+            "nftPages": "own-nft-pages",
+            "source": "own"
         }
         return updateAccountDetails(address, tgt_elements, 10)
     }
@@ -235,7 +255,8 @@
             "tokens": "search-tokens",
             "nfts": "search-nfts",
             "tokenPages": "search-token-pages",
-            "nftPages": "search-nft-pages"
+            "nftPages": "search-nft-pages",
+            "source": "search"
         }
         return updateAccountDetails(address, tgt_elements, 10)
     }
@@ -245,26 +266,48 @@
         updateSearchAccountDetails(address);
     }
 
+    function showImageLightbox() {
+        console.log("showImageLightbox; this=" + this);
+        let nfts = this.dataset.source == "own" ? own_nfts : search_nfts;
+        let nft_meta = nfts[this.dataset.idx];
+        let img_uri = this.src;
 
+        let img_nft = document.createElement("img");
+        img_nft.src = img_uri;
+        img_nft.className = "img_lightbox";
+        clearChildElements(document.getElementById("modal-image"));
+        document.getElementById("modal-image").appendChild(img_nft);
+        document.getElementById("modal-meta").value = JSON.stringify(nft_meta, null, 1);
+
+        // show
+        document.getElementById("backdrop").style.display = "block";
+        document.getElementById("lightbox-modal").style.display = "block";
+        document.getElementById("lightbox-modal").classList.add("show");
+    }
+
+    function hideImageLightbox() {
+        document.getElementById("backdrop").style.display = "none"
+        document.getElementById("lightbox-modal").style.display = "none"
+        document.getElementById("lightbox-modal").classList.remove("show")
+    }
+
+    // Get the modal
+    const lightbox = document.getElementById('lightbox-modal');
+
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function (event) {
+        if (event.target == lightbox) {
+            hideImageLightbox()
+        }
+    }
     document.getElementById("login").onclick = login;
     document.getElementById("ownAccountUpdateButton").onclick = updateOwnAccountDetails;
-    {#document.getElementById("btn-login").onclick = login;#}
-    {#document.getElementById("btn-logout").onclick = logOut;#}
-    {#document.getElementById("btn-getnfts-user").onclick = getNfts;#}
-    {#document.getElementById("btn-gettokens-user").onclick = getTokens;#}
-    {#document.getElementById("btn-getnfts-address").onclick = getNfts;#}
-    {#document.getElementById("btn-gettokens-address").onclick = getTokens;#}
 
     function onLoad() {
         console.log("onLoad executing...")
         Moralis.start({serverUrl, appId});
         var isLoggedIn = Moralis.User.current() != null;
         setLoggedIn(isLoggedIn);
-        if (isLoggedIn) {
-            {#ret = updateOwnAccountDetails();#}
-            {#document.getElementById("own-ether-balance").innerHTML = ret['balance'];#}
-        }
-
     }
 
 
