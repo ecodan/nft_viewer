@@ -1,9 +1,16 @@
 Simple Flask app which serves a SPA javascript Web3/NFT app.
+- app.py simply serves up a single page app
+- the HTML is mostly in index.html
+- the javascript (plain javascript) is in scripts.html and contains most of the business logic
+- the CSS is mostly Bootstrap plus a custom CSS in nft_viewer.css
 
 Can be run in a local python virtualenv initialized with requirements.txt.
 > python app.py
 
 Can also be run with the associated Dockerfile as a container.
+> docker build -t nft-viewer-flask-container .
+> docker run -p 5000:5000 nft-viewer-flask-container
+-> http://localhost:5000
 
 To configure Intellij/Pycharm to run in Docker during development:
 https://blog.jetbrains.com/pycharm/2017/03/docker-compose-getting-flask-up-and-running/
@@ -12,7 +19,8 @@ Deploying container to AWS Lightsail:
 From: https://aws.amazon.com/getting-started/hands-on/serve-a-flask-app/
 > aws lightsail create-container-service --service-name flask-service --power nano --scale 1 --region us-west-2
 > aws lightsail get-container-services --region us-west-2
-> aws lightsail push-container-image --service-name flask-service --label flask-container --image nft-viewer-flask-container
+> aws lightsail push-container-image --service-name flask-service --label flask-container --image nft-viewer-flask-container --region us-west-2
+<< update containers.json with container # >>
 > aws lightsail create-container-service-deployment --region us-west-2 --service-name flask-service --containers file://containers.json --public-endpoint file://public-endpoint.json
 > aws lightsail get-container-services --service-name flask-service --region us-west-2
 
