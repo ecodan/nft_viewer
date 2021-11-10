@@ -13,10 +13,8 @@
         crossorigin="anonymous"></script>
 
 <script>
+    var web3 = new Web3(Web3.givenProvider);
     const loginSpan = document.getElementById("login");
-
-    const serverUrl = "https://bsb204hu8au8.usemoralis.com:2053/server";
-    const appId = "ijXWHum9xxn68PQXjXtLip3UbSBaIGi0mHRUQNVz";
 
     function setLoggedIn(isLoggedIn) {
         if (!isLoggedIn) {
@@ -63,6 +61,10 @@
     }
 
     function getImageURI(symbol, metadata) {
+        if (metadata == null) {
+            console.log("getImageURI: no metadate for symbol " + symbol);
+            return "None";
+        }
         let uri = metadata.image;
         if (uri.toLowerCase().startsWith("ipfs:")) {
             if (uri.toLowerCase().slice(7).startsWith('ipfs')) {
@@ -75,12 +77,16 @@
     }
 
     function getImageName(symbol, metadata) {
+        if (metadata == null) {
+            console.log("getImageName: no metadate for symbol " + symbol);
+            return "None";
+        }
         if (symbol == "RARI") {
             return metadata.name;
         } else if (symbol == "OPENSTORE") {
             return metadata.name;
         } else {
-            return metadata.name;
+            return metadata ? metadata.name : 'None';
         }
     }
 
@@ -304,6 +310,9 @@
     document.getElementById("ownAccountUpdateButton").onclick = updateOwnAccountDetails;
 
     function onLoad() {
+        const serverUrl = "https://bsb204hu8au8.usemoralis.com:2053/server";
+        const appId = "ijXWHum9xxn68PQXjXtLip3UbSBaIGi0mHRUQNVz";
+
         console.log("onLoad executing...")
         Moralis.start({serverUrl, appId});
         var isLoggedIn = Moralis.User.current() != null;
