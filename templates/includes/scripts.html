@@ -63,7 +63,7 @@
     function getImageURI(symbol, metadata) {
         if (metadata == null) {
             console.log("getImageURI: no metadate for symbol " + symbol);
-            return "None";
+            return null;
         }
         let uri = metadata.image;
         if (uri.toLowerCase().startsWith("ipfs:")) {
@@ -79,14 +79,14 @@
     function getImageName(symbol, metadata) {
         if (metadata == null) {
             console.log("getImageName: no metadate for symbol " + symbol);
-            return "None";
+            return "Unknown name";
         }
         if (symbol == "RARI") {
             return metadata.name;
         } else if (symbol == "OPENSTORE") {
             return metadata.name;
         } else {
-            return metadata ? metadata.name : 'None';
+            return metadata ? metadata.name : 'Unknown name';
         }
     }
 
@@ -217,8 +217,12 @@
                     let td_thumb = document.createElement("td");
                     let nft_uri = getImageURI(nft['symbol'], JSON.parse(nft['metadata']));
                     let img_nft = document.createElement("img");
-                    img_nft.src = nft_uri;
-                    img_nft.onclick = showImageLightbox;
+                    if (nft_uri != null) {
+                        img_nft.src = nft_uri;
+                        img_nft.onclick = showImageLightbox;
+                    } else {
+                        img_nft.src = "/static/assets/img/circle_slash.jpg";
+                    }
                     img_nft.alt = nft_name;
                     img_nft.className = "img_thumbnail";
                     img_nft.setAttribute("data-source", tgt_elements.source);
@@ -267,8 +271,14 @@
         return updateAccountDetails(address, tgt_elements, 10)
     }
 
-    function lookupAddress() {
+    async function lookupAddress() {
         let address = document.getElementById("address-to-search").value;
+        if (address.startsWith("0x") == false) {
+            // assume ENS (may be a bold assumption)
+            console.log("looking up address as ENS name: " + address)
+            address = await web3.eth.ens.getAddress(address);
+            console.log("translated ENS name to address: " + address)
+        }
         updateSearchAccountDetails(address);
     }
 
@@ -310,8 +320,8 @@
     document.getElementById("ownAccountUpdateButton").onclick = updateOwnAccountDetails;
 
     function onLoad() {
-        const serverUrl = "https://bsb204hu8au8.usemoralis.com:2053/server";
-        const appId = "ijXWHum9xxn68PQXjXtLip3UbSBaIGi0mHRUQNVz";
+        const serverUrl = "https://wcnv4zgvl5xe.usemoralis.com:2053/server";
+        const appId = "4D78Rf8EPa27VXTHeHygvk0VKUJhZv8ERNsWsKjn";
 
         console.log("onLoad executing...")
         Moralis.start({serverUrl, appId});
